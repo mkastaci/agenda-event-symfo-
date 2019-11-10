@@ -1,0 +1,73 @@
+{% extends 'portfolio.html.twig' %}
+{% block title %}
+    {{title}}
+{% endblock %}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('css/style') }}
+{% endblock %}
+
+
+
+
+
+{% block body %}
+<div class="d-flex">
+<h1>{{ date.tostring() }}</h1>
+<div>
+    <a href="{{ path('agenda') }}?month={{ date.previousmonth().month }}&year={{ date.previousmonth().year }}" class="btn btn-primary">&lt;</a>
+    <a href="{{ path('agenda') }}?month={{ date.nextmonth().month }}&year={{ date.nextmonth().year }}" class="btn btn-primary">&gt;</a>
+</div>
+</div>
+
+<h1>{{ date.getweeks() }}</h1>
+
+
+<table class="calendar__table calendar__table--{{ date.getweeks() }}weeks">
+
+
+{% for i in 1..date.getweeks() %}
+
+    <tr>
+        {% for k, day in date.days %}
+        {% set datedujour = firstmonday.modify("+1 days")%}
+        
+        {% if date.inmonth(datedujour) %}
+            <td>
+        {% else %}
+            <td class="calendar__overmonth">
+        {% endif %}
+            
+            {% if i == 1 %}
+                <div class="calendar__weekday">
+                    {{ day }}
+                </div>            
+            {% endif %}
+                <div class="calendar__day">
+                    {{ datedujour.format('d') }}
+                    {% if liste_event[datedujour.format('Y-m-d')] is defined %}
+                       {% for event in liste_event[datedujour.format('Y-m-d')] %}
+                           <p>{{ event.name }}</p>
+                       {% endfor %}
+                    {% endif %}
+                    
+                    
+                </div>  
+        </td>
+        {% endfor %}
+    </tr>
+
+{% endfor %}
+ 
+
+</table>
+
+{% endblock %}
+
+
+
+
+
+
+{% block javascripts %}
+    
+{% endblock %}
